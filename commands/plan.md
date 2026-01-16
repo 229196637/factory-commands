@@ -6,52 +6,60 @@
 
 使用中文输出结果，但内部思考和分析过程使用英文。
 
-## Instructions
+## 参数格式
 
-1. First, research the current project structure using Read, Grep, and Glob tools to understand:
-   - Project type and framework
-   - Existing conventions and patterns
-   - Related code that might be affected
+`/plan [模式] [计划ID] [内容...]`
 
-2. Generate a simple plan ID (format: `P001`, `P002`, etc.) by checking existing plans in `.factory/docs/plans/`
+- 第一个参数: 模式 (`ulw` 深度思考 或 普通模式)
+- 第二个参数: 计划ID (如 `P001`，可选，不提供则自动生成)
+- 第三个参数起: 具体内容
 
-3. Create a plan document at `.factory/docs/plans/<ID>-<feature-name>.md` with this structure:
+**示例:**
+- `/plan ulw 实现用户登录功能` - 深度思考模式，自动生成ID
+- `/plan ulw P005 实现用户登录功能` - 深度思考模式，指定ID为P005
+- `/plan 添加缓存功能` - 普通模式，自动生成ID
+- `/plan P003 添加缓存功能` - 普通模式，指定ID为P003
 
-```markdown
----
-id: P001
-title: [功能标题]
-status: pending
-created: [today's date]
----
+## 模式检测
 
-# [功能标题]
+**解析 `$ARGUMENTS`：**
 
-## 概述
-简要描述此功能的作用。
+1. 检查第一个词是否为 `ulw`（不区分大小写）
+2. 检查第二个词是否匹配 `P\d+` 格式（计划ID）
+3. 剩余部分为具体内容
 
-## 技术方案
-- 关键实现步骤
-- 需要创建/修改的文件
-- 所需依赖
+### 如果以 `ulw` 开头 → 深度思考模式
 
-## 验收标准
-- [ ] 标准 1
-- [ ] 标准 2
-- [ ] 标准 3
+启动 `deep-thinking-planner` 子 agent 进行深度思考：
 
-## 实现任务
-1. 任务 1
-2. 任务 2
-3. 任务 3
-
-## 风险与注意事项
-- 需要注意的潜在问题
+```
+Task:
+  subagent_type: deep-thinking-planner
+  description: 深度思考生成计划
+  prompt: |
+    用户需求: [具体内容]
+    指定计划ID: [如有]
+    
+    请深度分析并创建实现计划。
 ```
 
-4. After creating the plan, ask the user if they want to:
-   - 使用 `/work` 或 `/work true` 开始实现
-   - 使用 `/review` 进行代码审查
-   - 修改计划
+该 agent 使用 `claude-opus-4-5-think` 模型，会自动处理计划生成流程。
 
-现在分析项目并创建计划: $ARGUMENTS
+### 如果不以 `ulw` 开头 → 普通模式
+
+启动 `standard-planner` 子 agent 进行普通计划：
+
+```
+Task:
+  subagent_type: standard-planner
+  description: 创建标准计划
+  prompt: |
+    用户需求: [具体内容]
+    指定计划ID: [如有]
+    
+    请分析并创建实现计划。
+```
+
+---
+
+现在解析参数并创建计划: $ARGUMENTS

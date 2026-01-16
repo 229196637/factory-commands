@@ -1,5 +1,7 @@
 启动 Ask 研究代理，深度分析代码库回答问题。
 
+**用户问题:** $ARGUMENTS
+
 ## Instructions
 
 使用 `Task` 工具调用 `ask-researcher` droid 来处理用户的咨询问题：
