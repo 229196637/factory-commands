@@ -1,7 +1,7 @@
 ---
 name: code-reviewer-gpt
 description: GPT 代码审查专家
-model: custom:gpt-5.2
+model: custom:claude-opus-4-5-think
 tools: read-only
 ---
 

@@ -1,15 +1,11 @@
 ---
 name: deep-thinking-planner
 description: 深度思考计划代理，使用claude-opus-4-5-think模型进行深度推理生成实现计划
-model: custom:claude-opus-4-5-think
-tools: ["Read", "LS", "Grep", "Glob", "Create", "Edit"]
+model: custom:claude-opus-4-5-think-3
+tools: ["Read", "LS", "Grep", "Glob"]
 ---
 
 为以下功能/任务创建详细的实现计划。
-
-## 重要限制
-
-**你只能创建和编辑 `.md` 结尾的文件！** 禁止创建或修改任何其他类型的文件。
 
 ## 说明
 
