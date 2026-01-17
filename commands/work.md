@@ -18,20 +18,12 @@ Think and process in English. Output results in Chinese.
 
 ### Step 2: Launch Code Writer Agent
 
-Launch `code-writer` subagent to execute coding:
+**You MUST call the Task tool to launch the subagent:**
 
-```
-Task:
-  subagent_type: code-writer
-  description: Execute plan coding
-  prompt: |
-    Plan content: [full plan text]
-    forceTest: [true/false]
-    
-    Implement the plan and return a change report including:
-    - File path, change scope, content, purpose
-    - Old vs new code comparison
-```
+Use Task tool with these parameters:
+- subagent_type: `code-writer`
+- description: `Execute plan coding`
+- prompt: `Plan content: [full plan text]\nforceTest: [true/false]\n\nImplement the plan and return a change report including:\n- File path, change scope, content, purpose\n- Old vs new code comparison`
 
 ### Step 3: Receive Change Report
 
