@@ -1,0 +1,31 @@
+# 运行时和临时文件
+artifacts/
+logs/
+sessions/
+temp/
+_backup/
+
+# 敏感配置
+auth.encrypted
+config.json
+settings.json
+mcp.json
+
+# 本地环境
+bin/
+certs/
+ide/
+sounds/
+
+# 历史记录
+history.json
+background-processes.json
+
+# specs (本地规格文件)
+specs/
+
+# 只保留以下目录:
+# - commands/   指令定义
+# - droids/     代理定义
+# - skills/     技能定义
+# - docs/       文档和计划
