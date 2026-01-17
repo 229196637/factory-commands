@@ -1,10 +1,27 @@
-深度分析代码库回答问题。
+Analyze codebase to answer questions.
 
-**问题:** $ARGUMENTS
+**Question:** $ARGUMENTS
+
+## Notes
+
+Think and process in English. Output results in Chinese.
 
 ## Instructions
 
-使用 `Task` 工具调用 `ask-researcher` 子代理，将上述完整问题传递给它进行研究分析。
+Launch `ask-researcher` subagent to analyze and answer:
 
-如果用户要求执行修改，回复：
+```
+Task:
+  subagent_type: ask-researcher
+  description: Research codebase question
+  prompt: |
+    Question: $ARGUMENTS
+    
+    Research the codebase and return a concise answer.
+    - Be concise, focus on key points
+    - Cite relevant code as evidence
+    - Return answer in Chinese
+```
+
+If user requests modifications, reply:
 > 当前处于咨询模式，不允许修改文件。如需执行修改，请直接提出修改请求。
