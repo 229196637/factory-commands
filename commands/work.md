@@ -1,59 +1,59 @@
-系统地执行当前计划，启动编码代理完成实现。
+Execute the current plan by launching a code-writer agent.
 
-## 参数说明
+## Parameters
 
-格式: `/work [forceTest]`
-- `true`: 强制运行单元测试，失败则修复重试(最多3次)
-- `false` 或 省略: 视情况运行测试 (检测到测试框架时运行)
+Format: `/work [forceTest]`
+- `true`: Force run unit tests, retry up to 3 times on failure
+- `false` or omit: Run tests only if test framework detected
 
-## 说明
+## Notes
 
-使用中文输出结果。
+Think and process in English. Output results in Chinese.
 
 ## Instructions
 
-### Step 1: 读取计划
-1. 在 `.factory/docs/plans/` 目录找到最新的 pending 计划
-2. 读取计划文件，更新状态为 `in_progress`
+### Step 1: Read Plan
+1. Find the latest pending plan in `.factory/docs/plans/` directory
+2. Read the plan file and update its status to `in_progress`
 
-### Step 2: 启动编码代理
+### Step 2: Launch Code Writer Agent
 
-启动 `code-writer` 子 agent 执行编码：
+Launch `code-writer` subagent to execute coding:
 
 ```
 Task:
   subagent_type: code-writer
-  description: 执行计划编码
+  description: Execute plan coding
   prompt: |
-    计划内容: [计划全文]
+    Plan content: [full plan text]
     forceTest: [true/false]
     
-    请按计划实现功能，完成后返回变更报告：
-    - 文件路径、变更范围、内容、作用
-    - 新旧代码对比
+    Implement the plan and return a change report including:
+    - File path, change scope, content, purpose
+    - Old vs new code comparison
 ```
 
-### Step 3: 接收变更报告
+### Step 3: Receive Change Report
 
-编码代理返回后，获取变更报告：
-- 修改的文件列表
-- 每个文件的变更范围
-- 变更内容和作用
-- 新旧代码对比
+After code-writer returns, collect the change report:
+- List of modified files
+- Change scope for each file
+- Change content and purpose
+- Old vs new code comparison
 
-### Step 4: 单元测试 (可选)
+### Step 4: Unit Test (Optional)
 
-| 参数 | 行为 |
-|------|------|
-| `true` | 强制执行，失败则修复重试，最多3次 |
-| `false` 或 省略 | 检测到测试框架时运行 |
+| Parameter | Behavior |
+|-----------|----------|
+| `true` | Force execution, retry up to 3 times on failure |
+| `false` or omit | Run only if test framework detected |
 
-### Step 5: 更新计划状态
-- 更新计划状态为 `completed`
+### Step 5: Update Plan Status
+- Update plan status to `completed`
 
-### Step 6: 输出总结
+### Step 6: Output Summary
 
-将编码代理返回的变更报告输出给用户：
+Output the change report from code-writer to user (in Chinese):
 
 ```markdown
 ## 执行完成
@@ -63,10 +63,10 @@ Task:
 |------|------|------|
 
 ### 详细变更
-[每个文件的新旧对比]
+[Old vs new comparison for each file]
 
 ### 测试结果
-[如运行了测试]
+[If tests were run]
 ```
 
-现在执行计划: $ARGUMENTS
+Now execute plan: $ARGUMENTS
