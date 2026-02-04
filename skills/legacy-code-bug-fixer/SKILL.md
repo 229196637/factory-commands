@@ -1,99 +1,102 @@
 ---
 name: legacy-code-bug-fixer
-description: 修复遗留代码中的逻辑Bug。当用户报告代码逻辑错误、运行时异常、功能不符合预期时使用。适用于没有AI辅助时编写的旧代码。
+description: 修复遗留代码中的逻辑Bug。当用户报告代码逻辑错误、运行时异常、功能不符合预期时使用。关键词：修复、fix、bug、错误、崩溃、crash、异常、exception、旧代码、遗留代码。
 ---
 
 # 遗留代码Bug修复
 
-修复之前没有AI辅助时编写的代码中出现的逻辑bug，提供系统化的分析和修复流程。
+修复没有AI辅助时编写的旧代码中的逻辑Bug，提供系统性的分析和修复流程。
 
-## 触发场景
+## 触发条件
 
+- 用户说"修复"、"fix"、"bug"、"错误"
+- 用户说"崩溃"、"crash"、"异常"、"exception"
+- 用户说"旧代码"、"遗留代码"、"老代码"
 - 用户报告代码逻辑错误
-- 运行时出现异常或崩溃
+- 运行时异常或崩溃
 - 功能行为不符合预期
 - 需要理解和修复旧代码
 
-## 核心原则
+## Core Principles
 
-1. **深度分析优先** - 不是简单的nil检查，而是理解代码意图和逻辑
-2. **方案先行** - 先提供多个修复方案，等用户确认后再执行
-3. **影响评估** - 评估修复对现有逻辑的影响
-4. **验证闭环** - 修复后验证效果
-
----
-
-## Phase 1: 问题收集
-
-### 1.1 收集错误信息
-
-```
-需要收集的信息：
-- 错误日志/堆栈信息
-- 错误发生的上下文
-- 触发条件和复现步骤
-- 预期行为 vs 实际行为
-```
-
-### 1.2 定位问题代码
-
-1. 从错误信息中提取关键信息（文件、行号、函数名）
-2. 使用 Grep 搜索相关代码
-3. 使用 Read 查看完整上下文
+1. **Deep analysis first** - Not just simple nil checks, but understanding code intent and logic
+2. **Solution first** - Provide multiple fix solutions first, execute after user confirmation
+3. **Impact assessment** - Assess fix impact on existing logic
+4. **Verification loop** - Verify effect after fix
 
 ---
 
-## Phase 2: 深度分析
+## Phase 1: Problem Collection
 
-### 2.1 调用链分析
+### 1.1 Collect Error Information
 
 ```
-分析步骤：
-1. 找到错误发生点
-2. 向上追溯调用链（谁调用了这个函数）
-3. 向下追溯数据流（数据从哪里来）
-4. 绘制调用关系图
+Information to collect:
+- Error log/stack trace
+- Context when error occurred
+- Trigger conditions and reproduction steps
+- Expected behavior vs actual behavior
 ```
 
-### 2.2 代码意图理解
+### 1.2 Locate Problem Code
 
-- 阅读函数注释和文档
-- 分析函数命名和参数
-- 查看相关测试用例
-- 对比类似功能的实现
+1. Extract key information from error message (file, line number, function name)
+2. Use Grep to search related code
+3. Use Read to view complete context
 
-### 2.3 逻辑缺陷识别
+---
 
-**常见逻辑缺陷类型：**
+## Phase 2: Deep Analysis
 
-| 类型 | 描述 | 检查方法 |
+### 2.1 Call Chain Analysis
+
+```
+Analysis steps:
+1. Find error occurrence point
+2. Trace call chain upward (who called this function)
+3. Trace data flow downward (where data comes from)
+4. Draw call relationship diagram
+```
+
+### 2.2 Code Intent Understanding
+
+- Read function comments and documentation
+- Analyze function naming and parameters
+- Check related test cases
+- Compare similar feature implementations
+
+### 2.3 Logic Defect Identification
+
+**Common logic defect types:**
+
+| Type | Description | Check Method |
 |------|------|----------|
-| 空值问题 | nil/null/undefined 未处理 | 检查所有变量来源 |
-| 时序问题 | 异步回调时机不对 | 检查初始化顺序 |
-| 边界问题 | 数组越界、循环条件 | 检查边界条件 |
-| 状态问题 | 状态机转换错误 | 检查状态流转 |
-| 缓存问题 | 缓存命中时同步回调 | 检查缓存逻辑 |
-| 类型问题 | 类型转换/比较错误 | 检查类型一致性 |
+| Null value issues | nil/null/undefined not handled | Check all variable sources |
+| Timing issues | Async callback timing wrong | Check initialization order |
+| Boundary issues | Array out of bounds, loop conditions | Check boundary conditions |
+| State issues | State machine transition errors | Check state flow |
+| Cache issues | Sync callback when cache hits | Check cache logic |
+| Type issues | Type conversion/comparison errors | Check type consistency |
 
-### 2.4 特殊情况处理
+### 2.4 Special Case Handling
 
-**缺失方法：**
-- 搜索原项目（如Unity原项目）查找实现
-- 分析方法用途和预期行为
-- 决定是实现还是移除调用
+**Missing methods:**
+- Search original project (e.g., Unity original project) for implementation
+- Analyze method purpose and expected behavior
+- Decide whether to implement or remove call
 
-**异步问题：**
-- 检查回调函数中依赖的变量
-- 确认变量在回调前已初始化
-- 考虑缓存命中时的同步回调场景
+**Async issues:**
+- Check variables that callback function depends on
+- Confirm variables are initialized before callback
+- Consider sync callback scenario when cache hits
 
 ---
 
-## Phase 3: 方案设计
+## Phase 3: Solution Design
 
-### 3.1 提供多个方案
+### 3.1 Provide Multiple Solutions
 
-**必须提供至少2-3个方案：**
+**Must provide at least 2-3 solutions:**
 
 ```markdown
 ## 修复方案
@@ -121,31 +124,31 @@ description: 修复遗留代码中的逻辑Bug。当用户报告代码逻辑错�
 **理由**: [为什么推荐这个方案]
 ```
 
-### 3.2 等待用户确认
+### 3.2 Wait for User Confirmation
 
-**重要：在用户明确选择方案之前，不要执行任何代码修改！**
-
----
-
-## Phase 4: 修复实施
-
-### 4.1 实施修复
-
-1. 按照用户选择的方案修改代码
-2. 保持代码风格一致
-3. 添加必要的注释说明修复原因
-
-### 4.2 验证修复
-
-- 检查修复是否解决原问题
-- 检查是否引入新问题
-- 运行相关测试（如有）
+**Important: Do not execute any code modifications before user explicitly chooses a solution!**
 
 ---
 
-## 输出格式
+## Phase 4: Fix Implementation
 
-### 分析报告
+### 4.1 Implement Fix
+
+1. Modify code according to user's chosen solution
+2. Keep code style consistent
+3. Add necessary comments explaining fix reason
+
+### 4.2 Verify Fix
+
+- Check if original problem is solved
+- Check if new problems are introduced
+- Run related tests (if any)
+
+---
+
+## Output Format
+
+### Analysis Report
 
 ```markdown
 ## Bug分析报告
@@ -172,7 +175,7 @@ description: 修复遗留代码中的逻辑Bug。当用户报告代码逻辑错�
 请选择方案后回复，我将执行修复。
 ```
 
-### 修复完成报告
+### Fix Completion Report
 
 ```markdown
 ## 修复完成
@@ -192,17 +195,17 @@ description: 修复遗留代码中的逻辑Bug。当用户报告代码逻辑错�
 
 ---
 
-## 检查清单
+## Checklist
 
-在分析过程中，确保检查以下项目：
+During analysis, ensure the following items are checked:
 
-- [ ] 错误信息已完整收集
-- [ ] 调用链已完整追溯
-- [ ] 代码原始意图已理解
-- [ ] 逻辑缺陷已识别
-- [ ] 多个修复方案已准备
-- [ ] 方案优缺点已列出
-- [ ] 影响范围已评估
-- [ ] 用户已确认方案
-- [ ] 修复已实施
-- [ ] 修复效果已验证
+- [ ] Error information fully collected
+- [ ] Call chain fully traced
+- [ ] Original code intent understood
+- [ ] Logic defects identified
+- [ ] Multiple fix solutions prepared
+- [ ] Solution pros and cons listed
+- [ ] Impact scope assessed
+- [ ] User confirmed solution
+- [ ] Fix implemented
+- [ ] Fix effect verified

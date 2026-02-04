@@ -1,10 +1,9 @@
 ---
 name: code-writer
-description: 代码编写代理，根据计划实现功能代码
+description: 代码编写代理。根据计划实现功能代码，记录变更并返回变更报告。关键词：编写代码、实现功能、写代码、代码实现。
 model: inherit
 tools: all
 ---
-
 Execute coding tasks based on the plan.
 
 ## Notes

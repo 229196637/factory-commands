@@ -1,71 +1,76 @@
-# Code Comparator Skill (代码对比技能)
+---
+name: code-comparator
+description: 跨项目代码对比分析。当用户需要对比不同项目的实现、研究问题解决方案、分析代码差异时使用。关键词：对比、比较、差异、vs、不同、两个项目。
+---
 
-跨项目代码对比分析。当需要比较不同项目的实现方式、研究问题解决方案、分析代码差异时使用。
+# 代码对比技能
 
-## Trigger Conditions (触发条件)
+跨项目代码对比分析。用于对比不同项目的实现、研究问题解决方案、分析代码差异。
 
-- 用户要求对比两个或多个项目的代码实现
-- 研究某个功能在不同项目中的实现方式
-- 分析代码差异和相似性
-- 寻找最佳实践或参考实现
-- 关键词：对比、比较、差异、compare、difference、vs
+## 触发条件
 
-## Workflow (工作流程)
+- 用户说"对比"、"比较"、"差异"、"不同"
+- 用户说"两个项目"、"A和B"、"vs"
+- 用户说"怎么实现的"、"参考实现"、"最佳实践"
+- 用户需要研究某功能在不同项目中的实现方式
+- 用户需要分析代码相似点和差异点
 
-### Phase 1: 收集对比目标
+## Workflow
 
-**必须确认以下信息：**
+### Phase 1: Collect Comparison Targets
 
-1. **项目路径**：要对比的项目绝对路径
-2. **对比范围**：具体的功能/模块/文件
-3. **对比维度**：
-   - 结构对比（文件组织、模块划分）
-   - 实现对比（算法、逻辑流程）
-   - API对比（接口设计、参数差异）
-   - 模式对比（设计模式、代码风格）
+**Must confirm the following information:**
 
-**示例问题：**
+1. **Project paths**: Absolute paths of projects to compare
+2. **Comparison scope**: Specific feature/module/file
+3. **Comparison dimensions**:
+   - Structure comparison (file organization, module division)
+   - Implementation comparison (algorithms, logic flow)
+   - API comparison (interface design, parameter differences)
+   - Pattern comparison (design patterns, code style)
+
+**Example questions:**
 ```
-请提供以下信息：
-1. 项目A路径：
-2. 项目B路径：
-3. 要对比的功能/模块：
-4. 关注的对比维度：
-```
-
-### Phase 2: 代码读取
-
-**使用工具定位和读取代码：**
-
-```
-1. Glob - 定位相关文件
-   - 搜索模式：**/*.lua, **/*.py, **/*.js 等
-   - 按功能模块筛选
-
-2. Grep - 搜索关键实现
-   - 搜索函数名、类名、关键逻辑
-   - 定位核心代码位置
-
-3. Read - 读取代码内容
-   - 读取定位到的文件
-   - 提取关键代码段
+Please provide the following information:
+1. Project A path:
+2. Project B path:
+3. Feature/module to compare:
+4. Comparison dimensions of interest:
 ```
 
-### Phase 3: 对比分析
+### Phase 2: Code Reading
 
-**分析维度：**
+**Use tools to locate and read code:**
 
-| 维度 | 分析内容 |
+```
+1. Glob - Locate related files
+   - Search patterns: **/*.lua, **/*.py, **/*.js, etc.
+   - Filter by feature module
+
+2. Grep - Search key implementations
+   - Search function names, class names, key logic
+   - Locate core code positions
+
+3. Read - Read code content
+   - Read located files
+   - Extract key code segments
+```
+
+### Phase 3: Comparison Analysis
+
+**Analysis dimensions:**
+
+| Dimension | Analysis Content |
 |------|----------|
-| 结构 | 文件组织、目录结构、模块划分 |
-| 实现 | 算法选择、逻辑流程、数据结构 |
-| API | 接口设计、参数定义、返回值 |
-| 模式 | 设计模式、代码风格、命名规范 |
-| 依赖 | 外部库、内部模块依赖关系 |
+| Structure | File organization, directory structure, module division |
+| Implementation | Algorithm selection, logic flow, data structures |
+| API | Interface design, parameter definitions, return values |
+| Pattern | Design patterns, code style, naming conventions |
+| Dependencies | External libraries, internal module dependencies |
 
-### Phase 4: 输出报告
+### Phase 4: Output Report
 
-**标准报告格式：**
+**Standard report format:**
 
 ```markdown
 ## 代码对比报告
@@ -107,57 +112,57 @@
 3. **改进建议**: [基于对比的改进方向]
 ```
 
-## Edge Cases (边界情况)
+## Edge Cases
 
-### 不同编程语言
-- 标注语言差异
-- 聚焦逻辑和设计对比
-- 忽略语法层面的差异
+### Different Programming Languages
+- Note language differences
+- Focus on logic and design comparison
+- Ignore syntax-level differences
 
-### 文件不存在
-- 报告缺失的文件
-- 继续对比可用部分
-- 建议用户确认路径
+### File Does Not Exist
+- Report missing files
+- Continue comparing available parts
+- Suggest user confirm paths
 
-### 大型代码库
-- 要求用户指定具体模块或文件范围
-- 分批次进行对比
-- 优先对比核心功能
+### Large Codebases
+- Request user to specify specific module or file scope
+- Compare in batches
+- Prioritize comparing core features
 
-### 版本差异
-- 确认对比的是否为同一功能的不同版本
-- 标注版本信息
-- 关注变更历史
+### Version Differences
+- Confirm if comparing different versions of same feature
+- Note version information
+- Focus on change history
 
-## Examples (使用示例)
+## Examples
 
-### 示例1：对比两个项目的登录功能
-
-```
-用户：帮我对比项目A和项目B的登录功能实现
-
-助手：
-1. 确认项目路径和登录模块位置
-2. 使用Glob定位登录相关文件
-3. 读取并分析两边的实现
-4. 输出对比报告
-```
-
-### 示例2：研究某个API的不同实现
+### Example 1: Compare Login Feature of Two Projects
 
 ```
-用户：我想看看不同项目是怎么实现文件上传的
+User: Help me compare login feature implementation of Project A and Project B
 
-助手：
-1. 确认要对比的项目
-2. 搜索文件上传相关代码
-3. 分析实现差异
-4. 总结最佳实践
+AI:
+1. Confirm project paths and login module locations
+2. Use Glob to locate login-related files
+3. Read and analyze both implementations
+4. Output comparison report
 ```
 
-## Notes (注意事项)
+### Example 2: Research Different Implementations of an API
 
-- 对比前先了解两个项目的整体架构
-- 关注核心逻辑，忽略无关细节
-- 保持客观，不偏向任何一方
-- 提供可操作的改进建议
+```
+User: I want to see how different projects implement file upload
+
+AI:
+1. Confirm projects to compare
+2. Search file upload related code
+3. Analyze implementation differences
+4. Summarize best practices
+```
+
+## Important Notes
+
+- Understand overall architecture of both projects before comparing
+- Focus on core logic, ignore irrelevant details
+- Stay objective, don't favor either side
+- Provide actionable improvement suggestions

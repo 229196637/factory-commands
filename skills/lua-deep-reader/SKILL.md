@@ -1,137 +1,139 @@
 ---
 name: lua-deep-reader
-description: 深度阅读Lua代码，追踪变量、函数的依赖关系和调用链。当遇到底层API（base._xxx）或服务器交互协议时自动停止。用于代码分析、功能理解、架构梳理。
+description: 深度阅读Lua代码，追踪变量、函数的依赖关系和调用链。当遇到底层API（base._xxx）或服务器交互协议时自动停止。关键词：阅读代码、分析代码、理解代码、调用链、依赖关系、深度阅读、Lua。
 ---
 
-# Lua 深度代码阅读
+# Lua深度代码阅读
 
-深度阅读Lua代码，了解代码、变量、函数的依赖关系，阅读到无法再阅读的底层API或服务器交互的地方就停止。
+深度阅读Lua代码，理解代码、变量和函数的依赖关系。遇到无法阅读的底层API或服务器交互点时停止。
 
-## 触发场景
+## 触发条件
 
 - 用户说"阅读代码"、"分析代码"、"理解代码"
-- 用户说"追踪调用链"、"依赖关系"
-- 用户说"这个函数是干什么的"、"这个变量从哪来"
-- 用户说"深度阅读"、"代码分析"
+- 用户说"调用链"、"依赖关系"、"谁调用了"
+- 用户说"这个函数做什么"、"这个变量从哪来"
+- 用户说"深度阅读"、"代码分析"、"Lua代码"
+- 用户需要追踪函数调用关系
+- 用户需要理解代码逻辑和架构
 
 ---
 
-## Phase 1: 入口定位
+## Phase 1: Entry Point Location
 
-### 1.1 确定起点
+### 1.1 Determine Starting Point
 
-根据用户输入确定阅读起点：
+Determine reading starting point based on user input:
 
-| 输入类型 | 处理方式 |
+| Input Type | Processing Method |
 |---------|---------|
-| 文件路径 | 直接读取该文件 |
-| 函数名 | 使用 Grep 搜索函数定义 |
-| 类名 | 搜索 `class("ClassName"` 或 `ClassName = class` |
-| 错误堆栈 | 从堆栈顶部开始追踪 |
-| 日志输出 | 搜索日志中的函数名/文件名 |
+| File path | Read the file directly |
+| Function name | Use Grep to search function definition |
+| Class name | Search `class("ClassName"` or `ClassName = class` |
+| Error stack | Start tracing from stack top |
+| Log output | Search function name/file name in log |
 
-### 1.2 搜索策略
+### 1.2 Search Strategy
 
 ```lua
--- 搜索函数定义
-Grep: "function ClassName.FunctionName" 或 "function ClassName:FunctionName"
+-- Search function definition
+Grep: "function ClassName.FunctionName" or "function ClassName:FunctionName"
 
--- 搜索类定义
-Grep: "class(\"ClassName\"" 或 "ClassName = class"
+-- Search class definition
+Grep: "class(\"ClassName\"" or "ClassName = class"
 
--- 搜索变量使用
-Grep: "self.m_VariableName" 或 "g_VariableName"
+-- Search variable usage
+Grep: "self.m_VariableName" or "g_VariableName"
 ```
 
 ---
 
-## Phase 2: 递归追踪
+## Phase 2: Recursive Tracing
 
-### 2.1 向上追踪（谁调用了这个函数）
+### 2.1 Trace Upward (Who calls this function)
 
-1. 使用 Grep 搜索函数被调用的位置
-2. 记录调用者的文件和行号
-3. 继续追踪调用者的调用者（递归）
+1. Use Grep to search where function is called
+2. Record caller's file and line number
+3. Continue tracing caller's caller (recursive)
 
 ```
-搜索模式:
+Search patterns:
 - ClassName:FunctionName(
 - ClassName.FunctionName(
 - self:FunctionName(
 - g_CtrlName:FunctionName(
 ```
 
-### 2.2 向下追踪（这个函数调用了谁）
+### 2.2 Trace Downward (What this function calls)
 
-1. 阅读函数体内容
-2. 识别所有函数调用
-3. 对每个调用进行递归追踪
+1. Read function body content
+2. Identify all function calls
+3. Recursively trace each call
 
-### 2.3 数据流追踪
+### 2.3 Data Flow Tracing
 
-追踪变量的来源和去向：
+Trace variable sources and destinations:
 
 ```
-变量来源:
-- 函数参数
-- self.m_xxx 成员变量
-- g_xxx 全局变量
-- local 局部变量
-- 函数返回值
+Variable sources:
+- Function parameters
+- self.m_xxx member variables
+- g_xxx global variables
+- local variables
+- Function return values
 ```
 
-### 2.4 记录依赖关系
+### 2.4 Record Dependencies
 
-使用树形结构记录：
+Use tree structure to record:
 
 ```
 FunctionA (file:line)
   ├─> FunctionB (file:line)
   │     ├─> FunctionC (file:line)
-  │     └─> [边界] base._xxx
+  │     └─> [Boundary] base._xxx
   └─> FunctionD (file:line)
-        └─> [边界] GS2CXxx
+        └─> [Boundary] GS2CXxx
 ```
 
 ---
 
-## Phase 3: 边界识别（停止条件）
+## Phase 3: Boundary Identification (Stop Conditions)
 
-### 3.1 停止边界定义
+### 3.1 Stop Boundary Definitions
 
-| 边界类型 | 识别模式 | 说明 |
+| Boundary Type | Recognition Pattern | Description |
 |---------|---------|------|
-| 星火底层API | `base._xxx` | 星火编辑器内部实现，无法追踪 |
-| 引擎API | `UnityEngine.*` | Unity/星火引擎封装 |
-| 服务器协议 | `GS2C*`, `C2GS*` | 客户端-服务器边界 |
-| 类型系统 | `classtype.*` | 底层类型定义 |
-| 全局控制器 | `g_*Ctrl` | 如果已分析过则停止 |
+| Spark Low-level API | `base._xxx` | Spark Editor internal implementation, cannot trace |
+| Engine API | `UnityEngine.*` | Unity/Spark engine wrapper |
+| Server Protocol | `GS2C*`, `C2GS*` | Client-server boundary |
+| Type System | `classtype.*` | Low-level type definitions |
+| Global Controllers | `g_*Ctrl` | Stop if already analyzed |
 
-### 3.2 边界处理
+### 3.2 Boundary Handling
 
-遇到边界时：
-1. 标记为边界节点
-2. 记录边界类型
-3. 停止该分支的追踪
-4. 继续其他分支
+When encountering boundary:
+1. Mark as boundary node
+2. Record boundary type
+3. Stop tracing this branch
+4. Continue other branches
 
-### 3.3 常见边界API参考
+### 3.3 Common Boundary API Reference
 
-**星火底层API (base._xxx)**:
-- `base._unit_set_attr` - 设置单位属性
-- `base._unit_get_attr` - 获取单位属性
-- `base._create_unit` - 创建单位
-- `base._destroy_unit` - 销毁单位
-- `base.gui_new` - 创建UI
-- `base.gui_check` - 检查UI
+**Spark Low-level API (base._xxx)**:
+- `base._unit_set_attr` - Set unit attribute
+- `base._unit_get_attr` - Get unit attribute
+- `base._create_unit` - Create unit
+- `base._destroy_unit` - Destroy unit
+- `base.gui_new` - Create UI
+- `base.gui_check` - Check UI
 
-**服务器协议**:
-- `GS2C*` - 服务器到客户端消息
-- `C2GS*` - 客户端到服务器消息
-- `netwar.*` - 战斗网络协议
-- `netlogin.*` - 登录网络协议
+**Server Protocols**:
+- `GS2C*` - Server to client messages
+- `C2GS*` - Client to server messages
+- `netwar.*` - Battle network protocol
+- `netlogin.*` - Login network protocol
 
-**引擎API**:
+**Engine API**:
 - `UnityEngine.GameObject.*`
 - `UnityEngine.Transform.*`
 - `classtype.MeshRender`
@@ -139,9 +141,9 @@ FunctionA (file:line)
 
 ---
 
-## Phase 4: 输出报告
+## Phase 4: Output Report
 
-### 4.1 报告模板
+### 4.1 Report Template
 
 ```markdown
 ## 代码阅读报告
@@ -183,66 +185,66 @@ FunctionA (file:line)
 
 ---
 
-## 追踪深度控制
+## Tracing Depth Control
 
-### 默认深度
-- 向下追踪：最多 5 层
-- 向上追踪：最多 3 层
+### Default Depth
+- Downward tracing: Maximum 5 levels
+- Upward tracing: Maximum 3 levels
 
-### 深度调整
-用户可以指定：
-- "深度阅读到底" - 追踪到所有边界
-- "只看一层" - 只追踪直接调用
-- "追踪 N 层" - 指定深度
-
----
-
-## 常见追踪模式
-
-### 模式1: 功能理解
-```
-目标: 理解某个功能的实现
-起点: 功能入口函数
-方向: 向下追踪
-输出: 调用关系图 + 关键逻辑说明
-```
-
-### 模式2: Bug定位
-```
-目标: 从错误堆栈定位问题
-起点: 错误发生点
-方向: 向上追踪调用者 + 向下追踪数据来源
-输出: 调用链 + 数据流 + 问题点
-```
-
-### 模式3: 架构梳理
-```
-目标: 理解模块间关系
-起点: 模块入口/控制器
-方向: 广度优先追踪
-输出: 模块依赖图 + 接口说明
-```
+### Depth Adjustment
+User can specify:
+- "Deep read to the end" - Trace to all boundaries
+- "Only one level" - Only trace direct calls
+- "Trace N levels" - Specify depth
 
 ---
 
-## 与其他技能的配合
+## Common Tracing Patterns
 
+### Pattern 1: Feature Understanding
 ```
-代码理解 → [lua-deep-reader] 深度阅读
-    ↓
-发现问题 → [legacy-code-bug-fixer] 修复Bug
-    ↓
-需要调试 → [debug-info-adder] 添加调试信息
-    ↓
-查API → [sce-api-reference] 查阅文档
+Goal: Understand implementation of a feature
+Starting point: Feature entry function
+Direction: Trace downward
+Output: Call relationship diagram + key logic explanation
+```
+
+### Pattern 2: Bug Location
+```
+Goal: Locate problem from error stack
+Starting point: Error occurrence point
+Direction: Trace callers upward + trace data sources downward
+Output: Call chain + data flow + problem point
+```
+
+### Pattern 3: Architecture Analysis
+```
+Goal: Understand inter-module relationships
+Starting point: Module entry/controller
+Direction: Breadth-first tracing
+Output: Module dependency diagram + interface description
 ```
 
 ---
 
-## 注意事项
+## Coordination with Other Skills
 
-1. **避免循环追踪**: 记录已追踪的函数，避免重复
-2. **控制输出量**: 大型调用链只展示关键路径
-3. **标注不确定性**: 对于推测的逻辑，明确标注
-4. **保持聚焦**: 围绕用户的分析目标，不要发散
-5. **及时停止**: 遇到边界立即停止，不要尝试猜测底层实现
+```
+Code understanding → [lua-deep-reader] Deep reading
+    ↓
+Problem found → [legacy-code-bug-fixer] Fix Bug
+    ↓
+Need debugging → [debug-info-adder] Add debug info
+    ↓
+Check API → [sce-api-reference] Check documentation
+```
+
+---
+
+## Important Notes
+
+1. **Avoid circular tracing**: Record traced functions, avoid repetition
+2. **Control output volume**: For large call chains, only show key paths
+3. **Mark uncertainty**: Clearly mark speculated logic
+4. **Stay focused**: Focus on user's analysis goal, don't diverge
+5. **Stop timely**: Stop immediately at boundaries, don't try to guess low-level implementation

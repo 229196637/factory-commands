@@ -1,60 +1,61 @@
 ---
 name: solutions-lookup
-description: 查询项目历史解决方案和踩坑记录。当用户提到"之前修复过"、"之前动过"、"以前遇到过"、"踩过坑"、"历史问题"等关键词时使用。
+description: 查询项目历史解决方案和踩坑记录。当用户提到"之前修复过"、"之前动过"、"以前遇到过"、"踩过坑"、"历史问题"等关键词时使用。关键词：之前、以前、历史、踩坑、解决方案、类似问题。
 ---
 
 # 解决方案查询
 
 查询 `.factory/docs/solutions/` 目录中的历史解决方案，帮助避免重复踩坑。
 
-## 触发场景
+## 触发条件
 
 - 用户说"之前修复过"、"之前动过"、"以前遇到过"
 - 用户说"踩过坑"、"历史问题"、"之前的解决方案"
 - 用户说"有没有类似问题"、"查一下知识库"
+- 用户说"以前怎么解决的"、"历史记录"
 - 遇到问题时想查看是否有历史记录
 
 ---
 
-## Phase 1: 扫描解决方案目录
+## Phase 1: Scan Solutions Directory
 
-### 1.1 检查目录
+### 1.1 Check Directory
 
 ```
-使用 LS 工具查看: <项目根目录>/.factory/docs/solutions/
+Use LS tool to view: <project-root>/.factory/docs/solutions/
 ```
 
-### 1.2 列出所有解决方案
+### 1.2 List All Solutions
 
-使用 Glob 工具查找所有解决方案文件：
+Use Glob tool to find all solution files:
 ```
-模式: .factory/docs/solutions/**/*.md
+Pattern: .factory/docs/solutions/**/*.md
 ```
 
 ---
 
-## Phase 2: 搜索匹配
+## Phase 2: Search and Match
 
-### 2.1 关键词搜索
+### 2.1 Keyword Search
 
-根据用户描述的问题，使用 Grep 搜索匹配的解决方案：
+Based on user's problem description, use Grep to search matching solutions:
 
-| 搜索范围 | 说明 |
+| Search Scope | Description |
 |---------|------|
-| 标题 | 问题的简短描述 |
-| tags | YAML frontmatter 中的标签 |
-| 问题描述 | 问题现象 |
-| 原因 | 根本原因 |
+| Title | Short description of the problem |
+| tags | Tags in YAML frontmatter |
+| Problem description | Problem symptoms |
+| Cause | Root cause |
 
-### 2.2 读取匹配文件
+### 2.2 Read Matching Files
 
-对于匹配的文件，使用 Read 工具读取完整内容。
+For matching files, use Read tool to read complete content.
 
 ---
 
-## Phase 3: 输出报告
+## Phase 3: Output Report
 
-### 3.1 找到匹配时
+### 3.1 When Match Found
 
 ```markdown
 ## 找到相关解决方案
@@ -71,7 +72,7 @@ description: 查询项目历史解决方案和踩坑记录。当用户提到"之
 ...
 ```
 
-### 3.2 未找到匹配时
+### 3.2 When No Match Found
 
 ```markdown
 ## 未找到相关解决方案
@@ -85,16 +86,16 @@ description: 查询项目历史解决方案和踩坑记录。当用户提到"之
 
 ---
 
-## 边界情况处理
+## Edge Case Handling
 
-### 情况1: solutions 目录不存在
+### Case 1: solutions Directory Does Not Exist
 
 ```
 提示: .factory/docs/solutions/ 目录不存在。
 建议: 使用 `/compound` 命令记录第一个解决方案，目录会自动创建。
 ```
 
-### 情况2: 目录为空
+### Case 2: Directory Is Empty
 
 ```
 提示: 知识库为空，暂无历史解决方案。
@@ -103,42 +104,42 @@ description: 查询项目历史解决方案和踩坑记录。当用户提到"之
 
 ---
 
-## 与其他命令的配合
+## Coordination with Other Commands
 
 ```
-遇到问题 → [solutions-lookup] 查询历史
+Encounter problem → [solutions-lookup] Query history
     ↓
-未找到 → 解决问题
+Not found → Solve problem
     ↓
-解决后 → /compound 记录解决方案
+After solving → /compound Record solution
     ↓
-下次遇到 → [solutions-lookup] 可以找到
+Next time → [solutions-lookup] Can find it
 ```
 
 ---
 
-## 使用示例
+## Usage Examples
 
-### 示例1: 查询特定问题
+### Example 1: Query Specific Problem
 ```
-用户: 这个 nil 崩溃之前遇到过吗？
+User: Have we encountered this nil crash before?
 AI:
-1. 搜索 solutions 目录中包含 "nil" 的文件
-2. 展示匹配的解决方案
-```
-
-### 示例2: 查询标签
-```
-用户: 有没有关于 UI 的坑？
-AI:
-1. 搜索 tags 包含 "ui" 的解决方案
-2. 列出所有匹配项
+1. Search files containing "nil" in solutions directory
+2. Display matching solutions
 ```
 
-### 示例3: 模糊查询
+### Example 2: Query by Tag
 ```
-用户: 之前动画系统好像有个问题
+User: Any pitfalls related to UI?
 AI:
-1. 搜索包含 "动画" 或 "animation" 的解决方案
-2. 展示相关记录
+1. Search solutions with tags containing "ui"
+2. List all matches
+```
+
+### Example 3: Fuzzy Query
+```
+User: There was an issue with animation system before
+AI:
+1. Search solutions containing "animation" or "动画"
+2. Display related records
 ```

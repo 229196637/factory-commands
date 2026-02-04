@@ -1,15 +1,14 @@
 ---
 name: standard-planner
-description: 普通计划代理，用于创建标准实现计划
+description: 标准计划代理。用于创建标准实现计划，分析项目结构并生成计划文档。关键词：计划、规划、实现计划、功能计划、plan。
 model: inherit
 tools: read-only
 ---
+Create a detailed implementation plan for the following feature/task.
 
-为以下功能/任务创建详细的实现计划。
+## Notes
 
-## 说明
-
-使用中文输出结果，但内部思考和分析过程使用英文。
+Think and process in English. Output results in Chinese.
 
 ## Instructions
 
@@ -55,6 +54,6 @@ created: [today's date]
 ```
 
 4. After creating the plan, ask the user if they want to:
-   - 使用 `/work` 或 `/work true` 开始实现
-   - 使用 `/review` 进行代码审查
-   - 修改计划
+   - Use `/work` or `/work true` to start implementation
+   - Use `/review` for code review
+   - Modify the plan

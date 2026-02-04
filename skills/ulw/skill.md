@@ -1,6 +1,6 @@
 ---
 name: ulw
-description: 深度思考探索技能。当用户需要深度分析代码、理解复杂逻辑、追踪调用链时使用。触发 code-explorer 代理进行深度思考搜索。
+description: 深度思考探索技能。当用户需要深度分析代码、理解复杂逻辑、追踪调用链时使用。关键词：深度分析、深度思考、复杂逻辑、调用链、依赖分析、影响范围、ulw。
 ---
 
 # ULW - 深度思考探索技能
@@ -11,45 +11,47 @@ ULW (Ultra-Level Wisdom) 是一个深度思考技能，用于启动 `code-explor
 
 ## 触发条件
 
+- 用户说"深度分析"、"深度思考"、"复杂逻辑"
+- 用户说"调用链"、"依赖分析"、"影响范围"
+- 用户说"ulw"、"深度探索"、"代码边界"
 - 用户需要深度理解代码逻辑
-- 需要追踪复杂的调用链
+- 需要追踪复杂调用链
 - 需要分析代码边界和依赖关系
 - 需要评估代码修改的影响范围
-- 用户明确使用 `ulw` 关键字
 
-## 指令
+## Instructions
 
-当此技能被触发时，启动 `code-explorer` 子代理：
+When this skill is triggered, launch the `code-explorer` subagent:
 
 ```
 Task:
   subagent_type: code-explorer
-  description: 深度代码探索
+  description: Deep code exploration
   prompt: |
-    用户需求: [当前上下文中的用户需求]
+    User requirement: [User requirement from current context]
     
-    请使用深度思考模式分析代码：
-    1. 理解用户的探索目标
-    2. 使用 Grep、Read、Glob 工具搜索相关代码
-    3. 追踪调用链和依赖关系
-    4. 分析代码边界和影响范围
-    5. 输出详细的分析报告
+    Please use deep thinking mode to analyze code:
+    1. Understand user's exploration goal
+    2. Use Grep, Read, Glob tools to search related code
+    3. Trace call chains and dependencies
+    4. Analyze code boundaries and impact scope
+    5. Output detailed analysis report
 ```
 
-## 探索模式
+## Exploration Modes
 
-`code-explorer` 代理支持以下探索模式：
+The `code-explorer` agent supports the following exploration modes:
 
-| 模式 | 说明 |
+| Mode | Description |
 |------|------|
-| call-chain | 追踪函数调用链 |
-| boundary | 分析模块边界 |
-| dependency | 分析依赖关系 |
-| impact | 分析修改影响 |
+| call-chain | Trace function call chains |
+| boundary | Analyze module boundaries |
+| dependency | Analyze dependency relationships |
+| impact | Analyze modification impact |
 
-## 输出格式
+## Output Format
 
-探索完成后，代理会输出：
+After exploration is complete, the agent will output:
 
 ```markdown
 # 探索报告: [目标描述]
@@ -76,8 +78,8 @@ Task:
 [文件列表]
 ```
 
-## 注意事项
+## Important Notes
 
-1. 此技能使用 `claude-opus-4-5-think` 深度思考模型
-2. 适用于复杂代码分析，简单查询无需使用
-3. 分析过程可能需要较长时间
+1. This skill uses `claude-opus-4-5-think` deep thinking model
+2. Suitable for complex code analysis, not needed for simple queries
+3. Analysis process may take longer time

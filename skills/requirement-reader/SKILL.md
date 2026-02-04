@@ -1,88 +1,89 @@
 ---
 name: requirement-reader
-description: 读取项目根目录下docs/requirement/对应模块文件夹中的需求文档。当用户要求阅读指定模块需求、查看需求规则、了解功能规范时使用。
+description: 读取项目根目录下docs/requirement/对应模块文件夹中的需求文档。当用户要求阅读指定模块需求、查看需求规则、了解功能规范时使用。关键词：需求、需求文档、规则、规范、功能说明。
 ---
 
 # 需求文档阅读器
 
-读取项目 `docs/requirement/<模块名>/` 目录下的需求文档，帮助理解模块的功能需求、业务规则和技术约束。
+读取 `docs/requirement/<模块名>/` 目录下的需求文档，帮助理解模块的功能需求、业务规则和技术约束。
 
-## 触发场景
+## 触发条件
 
-- 用户说"阅读需求"、"查看需求"、"读取需求文档"
-- 用户说"了解XX模块的需求"、"XX模块的规则是什么"
-- 开发新功能前需要理解需求规范
-- 用户说"需求"、"requirement"相关词汇
+- 用户说"阅读需求"、"查看需求"、"需求文档"
+- 用户说"XX模块的需求"、"XX模块的规则"
+- 用户说"功能规范"、"业务规则"、"技术约束"
+- 开发新功能前需要了解需求规范
+- 用户提到"需求"、"规则"、"规范"相关词汇
 
 ---
 
-## Phase 1: 定位需求文档
+## Phase 1: Locate Requirement Documents
 
-### 1.1 确认目录结构
+### 1.1 Confirm Directory Structure
 
-首先检查项目根目录下是否存在 `docs/requirement/` 目录：
+First check if `docs/requirement/` directory exists under project root:
 
 ```
-使用 LS 工具查看: <项目根目录>/docs/requirement/
+Use LS tool to view: <project-root>/docs/requirement/
 ```
 
-### 1.2 定位模块文件夹
+### 1.2 Locate Module Folder
 
-根据用户指定的模块名，定位对应的文件夹：
+Based on user-specified module name, locate corresponding folder:
 
-| 用户输入 | 查找路径 |
+| User Input | Search Path |
 |---------|---------|
-| 模块名明确 | `docs/requirement/<模块名>/` |
-| 模块名模糊 | 列出所有可用模块供用户选择 |
-| 未指定模块 | 列出所有可用模块供用户选择 |
+| Module name is clear | `docs/requirement/<module-name>/` |
+| Module name is vague | List all available modules for user to choose |
+| Module not specified | List all available modules for user to choose |
 
-### 1.3 列出文档文件
+### 1.3 List Document Files
 
-使用 Glob 工具查找模块文件夹中的所有文档：
+Use Glob tool to find all documents in module folder:
 
 ```
-模式: docs/requirement/<模块名>/**/*.md
-模式: docs/requirement/<模块名>/**/*.txt
+Pattern: docs/requirement/<module-name>/**/*.md
+Pattern: docs/requirement/<module-name>/**/*.txt
 ```
 
 ---
 
-## Phase 2: 阅读需求文档
+## Phase 2: Read Requirement Documents
 
-### 2.1 阅读优先级
+### 2.1 Reading Priority
 
-按以下优先级依次阅读文档：
+Read documents in the following priority order:
 
-1. **README.md** - 模块概述和入口文档
-2. **index.md** - 索引文档
-3. **其他 .md 文件** - 按字母顺序
-4. **.txt 文件** - 补充说明
+1. **README.md** - Module overview and entry document
+2. **index.md** - Index document
+3. **Other .md files** - In alphabetical order
+4. **.txt files** - Supplementary notes
 
-### 2.2 提取关键信息
+### 2.2 Extract Key Information
 
-阅读时重点关注以下内容：
+Focus on the following content when reading:
 
-| 信息类型 | 关注点 |
+| Info Type | Focus Points |
 |---------|--------|
-| 功能需求 | 模块要实现什么功能 |
-| 业务规则 | 业务逻辑和约束条件 |
-| 技术约束 | 技术限制、依赖、接口定义 |
-| 数据结构 | 数据格式、字段说明 |
-| 流程说明 | 操作流程、状态转换 |
-| 边界情况 | 异常处理、特殊场景 |
+| Functional Requirements | What features the module should implement |
+| Business Rules | Business logic and constraints |
+| Technical Constraints | Technical limitations, dependencies, interface definitions |
+| Data Structures | Data formats, field descriptions |
+| Process Descriptions | Operation flows, state transitions |
+| Edge Cases | Exception handling, special scenarios |
 
-### 2.3 代码示例处理
+### 2.3 Code Example Handling
 
-如果需求文档中包含代码示例：
-- 理解代码的用途和上下文
-- 记录API调用方式
-- 注意参数和返回值说明
+If requirement documents contain code examples:
+- Understand the purpose and context of the code
+- Record API calling methods
+- Note parameter and return value descriptions
 
 ---
 
-## Phase 3: 输出报告
+## Phase 3: Output Report
 
-### 3.1 报告模板
+### 3.1 Report Template
 
 ```markdown
 ## 需求阅读报告
@@ -117,9 +118,9 @@ description: 读取项目根目录下docs/requirement/对应模块文件夹中�
 
 ---
 
-## 边界情况处理
+## Edge Case Handling
 
-### 情况1: docs/requirement/ 目录不存在
+### Case 1: docs/requirement/ Directory Does Not Exist
 
 ```
 提示: 项目根目录下未找到 docs/requirement/ 目录。
@@ -128,7 +129,7 @@ description: 读取项目根目录下docs/requirement/对应模块文件夹中�
 2. 检查需求文档是否存放在其他位置
 ```
 
-### 情况2: 指定模块不存在
+### Case 2: Specified Module Does Not Exist
 
 ```
 提示: 未找到模块 [模块名] 的需求文档。
@@ -139,55 +140,55 @@ description: 读取项目根目录下docs/requirement/对应模块文件夹中�
 请选择一个模块或检查模块名称。
 ```
 
-### 情况3: 模块文件夹为空
+### Case 3: Module Folder Is Empty
 
 ```
 提示: 模块 [模块名] 的需求文件夹为空，暂无需求文档。
 ```
 
-### 情况4: 包含子文件夹
+### Case 4: Contains Subfolders
 
-递归读取所有子文件夹中的文档，并在报告中标注文档层级结构。
-
----
-
-## 与其他技能的配合
-
-```
-阅读需求 → [requirement-reader] 理解需求
-    ↓
-代码实现 → 根据需求开发功能
-    ↓
-遇到问题 → [legacy-code-bug-fixer] 修复Bug
-    ↓
-需要调试 → [debug-info-adder] 添加调试信息
-```
+Recursively read all documents in subfolders and mark document hierarchy structure in report.
 
 ---
 
-## 使用示例
+## Coordination with Other Skills
 
-### 示例1: 阅读指定模块需求
 ```
-用户: 阅读场景加载模块的需求
+Read requirements → [requirement-reader] Understand requirements
+    ↓
+Code implementation → Develop features based on requirements
+    ↓
+Encounter problems → [legacy-code-bug-fixer] Fix Bug
+    ↓
+Need debugging → [debug-info-adder] Add debug info
+```
+
+---
+
+## Usage Examples
+
+### Example 1: Read Specific Module Requirements
+```
+User: Read scene loading module requirements
 AI: 
-1. 检查 docs/requirement/场景加载/ 目录
-2. 读取目录下所有文档
-3. 输出需求报告
+1. Check docs/requirement/场景加载/ directory
+2. Read all documents in directory
+3. Output requirement report
 ```
 
-### 示例2: 查看所有可用模块
+### Example 2: View All Available Modules
 ```
-用户: 有哪些需求文档
+User: What requirement documents are available
 AI:
-1. 列出 docs/requirement/ 下所有子文件夹
-2. 展示可用模块列表
+1. List all subfolders under docs/requirement/
+2. Display available module list
 ```
 
-### 示例3: 模糊查找
+### Example 3: Fuzzy Search
 ```
-用户: 阅读UI相关的需求
+User: Read UI-related requirements
 AI:
-1. 搜索包含"UI"关键词的模块文件夹
-2. 列出匹配结果供用户选择
+1. Search module folders containing "UI" keyword
+2. List matching results for user to choose
 ```

@@ -1,255 +1,257 @@
 ---
 name: debug-info-adder
-description: 添加调试信息来定位问题。当遇到陌生问题、无法直接从逻辑推断、需要打印变量值或追踪调用链时使用。
+description: 添加调试信息来定位问题。当遇到陌生问题、无法直接从逻辑推断、需要打印变量值或追踪调用链时使用。关键词：调试、debug、打印、print、日志、log、追踪、trace。
 ---
 
 # 调试信息添加指南
 
-当遇到陌生问题，无法直接从逻辑推断时，系统化地添加调试信息来定位问题。
+当遇到陌生问题、无法直接从逻辑推断时，系统性地添加调试信息来定位问题。
 
-## 触发场景
+## 触发条件
 
+- 用户说"调试"、"debug"、"打印"、"print"
+- 用户说"加日志"、"加log"、"追踪"、"trace"
 - 无法直接从逻辑推断问题原因
 - 变量值不明确，需要打印确认
-- 调用链不清晰，需要堆栈跟踪
+- 调用链不清楚，需要堆栈跟踪
 - 时序问题，需要时间戳追踪
-- 异步回调中的状态不确定
+- 异步回调中状态不确定
 
 ---
 
-## 调试信息添加策略
+## Debug Information Addition Strategies
 
-### 策略A: 单点调试（简单问题）
+### Strategy A: Single Point Debugging (Simple Problems)
 
-适用于：变量值不明确、单个函数内的问题
+Applicable for: Unclear variable values, problems within a single function
 
 ```lua
---DEBUG: 打印变量值
-print("[模块名] 变量名:", 变量值)
+--DEBUG: Print variable value
+print("[ModuleName] varName:", varValue)
 
---DEBUG: 打印多个变量
-print("[模块名] 状态:", var1, var2, var3)
+--DEBUG: Print multiple variables
+print("[ModuleName] state:", var1, var2, var3)
 
---DEBUG: 打印表内容
-print("[模块名] 表内容:", table.tostring(myTable))
+--DEBUG: Print table contents
+print("[ModuleName] table contents:", table.tostring(myTable))
 ```
 
-### 策略B: 调用链追踪（复杂问题）
+### Strategy B: Call Chain Tracing (Complex Problems)
 
-适用于：不清楚函数被谁调用、调用顺序问题
+Applicable for: Unclear who calls the function, call order issues
 
 ```lua
---DEBUG: 函数入口 + 堆栈
-print("[模块名] 函数入口, 参数:", param1, param2)
+--DEBUG: Function entry + stack
+print("[ModuleName] Function entry, params:", param1, param2)
 print(debug.traceback())
 
---DEBUG: 简化堆栈（只打印关键信息）
-print("[模块名] 调用来源:", debug.getinfo(2, "Sl").source, debug.getinfo(2, "Sl").currentline)
+--DEBUG: Simplified stack (only print key info)
+print("[ModuleName] Call source:", debug.getinfo(2, "Sl").source, debug.getinfo(2, "Sl").currentline)
 ```
 
-### 策略C: 时序追踪（异步/时序问题）
+### Strategy C: Timing Tracing (Async/Timing Problems)
 
-适用于：异步回调、帧更新、事件顺序问题
+Applicable for: Async callbacks, frame updates, event order issues
 
 ```lua
---DEBUG: 带时间戳的日志
-print(string.format("[%s][帧%d][模块名] 事件: %s", 
+--DEBUG: Log with timestamp
+print(string.format("[%s][Frame%d][ModuleName] Event: %s", 
     os.date("%H:%M:%S"), 
     UnityEngine.Time.frameCount or 0, 
-    描述))
+    description))
 
---DEBUG: 异步回调追踪
-print("[模块名] 回调触发, 当前状态:", self.m_State)
+--DEBUG: Async callback tracing
+print("[ModuleName] Callback triggered, current state:", self.m_State)
 ```
 
-### 策略D: 条件断点（特定条件问题）
+### Strategy D: Conditional Breakpoint (Specific Condition Problems)
 
-适用于：只在特定条件下出现的问题
+Applicable for: Problems that only occur under specific conditions
 
 ```lua
---DEBUG: 条件打印
-if 特定条件 then
-    print("[模块名] 触发条件:", 条件值)
+--DEBUG: Conditional print
+if specificCondition then
+    print("[ModuleName] Condition triggered:", conditionValue)
     print(debug.traceback())
 end
 
---DEBUG: 计数器
+--DEBUG: Counter
 self._debugCount = (self._debugCount or 0) + 1
 if self._debugCount % 100 == 0 then
-    print("[模块名] 调用次数:", self._debugCount)
+    print("[ModuleName] Call count:", self._debugCount)
 end
 ```
 
 ---
 
-## 调试点选择原则
+## Debug Point Selection Principles
 
-### 1. 入口点
-在函数入口打印参数，确认输入是否正确：
+### 1. Entry Points
+Print parameters at function entry to confirm input is correct:
 ```lua
 function MyClass.DoSomething(self, param1, param2)
-    --DEBUG: 入口点
-    print("[MyClass.DoSomething] 入口, param1:", param1, "param2:", param2)
-    -- 原有代码...
+    --DEBUG: Entry point
+    print("[MyClass.DoSomething] Entry, param1:", param1, "param2:", param2)
+    -- Original code...
 end
 ```
 
-### 2. 分支点
-在 if/else 分支打印条件值，确认走了哪个分支：
+### 2. Branch Points
+Print condition values at if/else branches to confirm which branch is taken:
 ```lua
---DEBUG: 分支点
-print("[模块名] 条件判断, condition:", condition, "type:", type(condition))
+--DEBUG: Branch point
+print("[ModuleName] Condition check, condition:", condition, "type:", type(condition))
 if condition then
-    print("[模块名] 进入 true 分支")
+    print("[ModuleName] Entering true branch")
 else
-    print("[模块名] 进入 false 分支")
+    print("[ModuleName] Entering false branch")
 end
 ```
 
-### 3. 调用点
-在关键函数调用前后打印，确认调用是否成功：
+### 3. Call Points
+Print before and after key function calls to confirm call success:
 ```lua
---DEBUG: 调用前
-print("[模块名] 即将调用 SomeFunction, 参数:", arg)
+--DEBUG: Before call
+print("[ModuleName] About to call SomeFunction, param:", arg)
 local result = SomeFunction(arg)
---DEBUG: 调用后
-print("[模块名] SomeFunction 返回:", result, "type:", type(result))
+--DEBUG: After call
+print("[ModuleName] SomeFunction returned:", result, "type:", type(result))
 ```
 
-### 4. 异常点
-在可能出错的位置打印状态：
+### 4. Exception Points
+Print state at potentially error-prone locations:
 ```lua
---DEBUG: nil 检查点
+--DEBUG: nil check point
 if not obj then
-    print("[模块名] obj 为 nil!")
+    print("[ModuleName] obj is nil!")
     print(debug.traceback())
     return
 end
-print("[模块名] obj 存在, 类型:", type(obj))
+print("[ModuleName] obj exists, type:", type(obj))
 ```
 
 ---
 
-## 调试信息格式规范
+## Debug Information Format Standards
 
-### 标准格式
+### Standard Format
 ```lua
--- 普通信息
-print("[模块名] 描述:", 值)
+-- Normal info
+print("[ModuleName] Description:", value)
 
--- 警告信息
-print("[模块名][WARN] 描述:", 值)
+-- Warning info
+print("[ModuleName][WARN] Description:", value)
 
--- 错误信息
-printerror("[模块名] 错误描述:", 错误信息)
+-- Error info
+printerror("[ModuleName] Error description:", errorInfo)
 ```
 
-### 模块名命名
-- 使用类名或文件名: `[CResCtrl]`, `[Camera]`, `[SpringPanel]`
-- 包含函数名更清晰: `[Camera.SetPosition]`, `[CResCtrl.Load]`
+### Module Naming
+- Use class name or file name: `[CResCtrl]`, `[Camera]`, `[SpringPanel]`
+- Including function name is clearer: `[Camera.SetPosition]`, `[CResCtrl.Load]`
 
-### 值的格式化
+### Value Formatting
 ```lua
--- 数字保留小数
-print(string.format("[模块名] 位置: (%.2f, %.2f, %.2f)", x, y, z))
+-- Keep decimal places for numbers
+print(string.format("[ModuleName] Position: (%.2f, %.2f, %.2f)", x, y, z))
 
--- 布尔值明确显示
-print("[模块名] 是否启用:", enabled and "true" or "false")
+-- Explicitly show boolean values
+print("[ModuleName] Is enabled:", enabled and "true" or "false")
 
--- nil 值明确标注
-print("[模块名] 对象:", obj or "nil")
+-- Explicitly mark nil values
+print("[ModuleName] Object:", obj or "nil")
 ```
 
 ---
 
-## 调试流程
+## Debug Workflow
 
-### 步骤1: 确定问题范围
-1. 阅读错误日志，确定出错位置
-2. 分析调用栈，理解调用链
-3. 确定需要添加调试信息的范围
+### Step 1: Determine Problem Scope
+1. Read error log, determine error location
+2. Analyze call stack, understand call chain
+3. Determine scope for adding debug info
 
-### 步骤2: 添加调试信息
-1. 在关键位置添加 `--DEBUG:` 标记的打印语句
-2. 选择合适的策略（单点/调用链/时序）
-3. 确保打印信息足够定位问题
+### Step 2: Add Debug Information
+1. Add print statements marked with `--DEBUG:` at key locations
+2. Choose appropriate strategy (single point/call chain/timing)
+3. Ensure printed info is sufficient to locate problem
 
-### 步骤3: 运行并分析
-1. 运行程序复现问题
-2. 查看日志输出
-3. 根据输出缩小问题范围
+### Step 3: Run and Analyze
+1. Run program to reproduce problem
+2. View log output
+3. Narrow down problem scope based on output
 
-### 步骤4: 迭代调试
-1. 如果信息不足，添加更多调试点
-2. 如果范围太大，缩小调试范围
-3. 重复直到定位问题
+### Step 4: Iterative Debugging
+1. If info is insufficient, add more debug points
+2. If scope is too large, narrow debug scope
+3. Repeat until problem is located
 
-### 步骤5: 清理调试代码
-1. 问题解决后，删除 `--DEBUG:` 标记的代码
-2. 保留有价值的日志点（去掉 DEBUG 标记）
-3. 确保不影响正常功能
+### Step 5: Clean Up Debug Code
+1. After problem is solved, delete code marked with `--DEBUG:`
+2. Keep valuable log points (remove DEBUG marker)
+3. Ensure normal functionality is not affected
 
 ---
 
-## 常见场景调试模板
+## Common Scenario Debug Templates
 
-### 场景1: nil 值错误
+### Scenario 1: nil Value Error
 ```lua
--- 在出错位置前添加
---DEBUG: 追踪 nil 来源
-print("[模块名] 检查点1, obj:", obj or "nil")
-print("[模块名] 检查点1, obj.field:", obj and obj.field or "nil")
+-- Add before error location
+--DEBUG: Trace nil source
+print("[ModuleName] Checkpoint1, obj:", obj or "nil")
+print("[ModuleName] Checkpoint1, obj.field:", obj and obj.field or "nil")
 ```
 
-### 场景2: 函数未被调用
+### Scenario 2: Function Not Called
 ```lua
--- 在函数入口添加
+-- Add at function entry
 function MyFunc()
-    --DEBUG: 确认函数被调用
-    print("[模块名] MyFunc 被调用")
+    --DEBUG: Confirm function is called
+    print("[ModuleName] MyFunc is called")
     print(debug.traceback())
 end
 ```
 
-### 场景3: 值不符合预期
+### Scenario 3: Value Not As Expected
 ```lua
--- 在赋值前后添加
---DEBUG: 追踪值变化
-print("[模块名] 赋值前, value:", value)
+-- Add before and after assignment
+--DEBUG: Trace value change
+print("[ModuleName] Before assignment, value:", value)
 value = SomeCalculation()
-print("[模块名] 赋值后, value:", value)
+print("[ModuleName] After assignment, value:", value)
 ```
 
-### 场景4: 异步回调问题
+### Scenario 4: Async Callback Problem
 ```lua
--- 在回调注册和触发时添加
---DEBUG: 回调注册
-print("[模块名] 注册回调, 当前帧:", UnityEngine.Time.frameCount)
+-- Add at callback registration and trigger
+--DEBUG: Callback registration
+print("[ModuleName] Register callback, frame:", UnityEngine.Time.frameCount)
 
--- 在回调函数内
---DEBUG: 回调触发
-print("[模块名] 回调触发, 当前帧:", UnityEngine.Time.frameCount)
-print("[模块名] 回调时状态:", self.m_State)
+-- Inside callback function
+--DEBUG: Callback triggered
+print("[ModuleName] Callback triggered, frame:", UnityEngine.Time.frameCount)
+print("[ModuleName] State at callback:", self.m_State)
 ```
 
 ---
 
-## 注意事项
+## Important Notes
 
-1. **标记调试代码**: 所有调试代码都用 `--DEBUG:` 注释标记，方便后续清理
-2. **避免性能影响**: 不要在高频调用的地方添加大量打印
-3. **保护敏感信息**: 不要打印密码、密钥等敏感数据
-4. **及时清理**: 问题解决后及时删除调试代码
-5. **保留有价值的日志**: 对于关键流程，可以保留日志但去掉 DEBUG 标记
+1. **Mark debug code**: All debug code marked with `--DEBUG:` comment for easy cleanup
+2. **Avoid performance impact**: Don't add lots of prints in high-frequency calls
+3. **Protect sensitive info**: Don't print passwords, keys, or other sensitive data
+4. **Clean up timely**: Delete debug code promptly after problem is solved
+5. **Keep valuable logs**: For key flows, keep logs but remove DEBUG marker
 
 ---
 
-## 与其他技能的配合
+## Coordination with Other Skills
 
 ```
-问题发现 → [debug-info-adder] 添加调试信息
+Problem found → [debug-info-adder] Add debug info
     ↓
-运行程序 → [spark-editor-log-analyzer] 分析日志
+Run program → [spark-editor-log-analyzer] Analyze logs
     ↓
-定位问题 → [legacy-code-bug-fixer] 修复Bug
+Locate problem → [legacy-code-bug-fixer] Fix Bug
 ```

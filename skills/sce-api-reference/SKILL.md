@@ -1,122 +1,124 @@
 ---
 name: sce-api-reference
-description: 星火编辑器API参考指南。当设计星火引擎底层API、查阅官方文档、遇到base._xxx调用时使用。提供文档导航和核心API速查。
+description: 星火编辑器API参考指南。当设计星火引擎底层API、查阅官方文档、遇到base._xxx调用时使用。关键词：星火、SCE、API、base._xxx、官方文档、引擎API。
 ---
 
-# 星火编辑器 API 参考指南
+# 星火编辑器API参考指南
 
-当需要设计星火引擎底层API或查阅官方文档时，使用此技能快速定位所需信息。
+设计星火引擎底层API或查阅官方文档时，使用此技能快速定位所需信息。
 
-## 触发场景
+## 触发条件
 
+- 用户说"星火API"、"SCE API"、"引擎API"
+- 用户说"base._xxx"、"官方文档"、"API文档"
 - 设计或实现星火引擎底层API
 - 遇到 `base._xxx` 或 `self._xxx` 调用需要查阅
 - 需要了解星火编辑器的Lua/TypeScript API
 - 客户端/服务端API差异问题
 
-## 官方文档入口
+## Official Documentation Entry
 
-**主文档**: https://doc.sce.xd.com/
+**Main Documentation**: https://doc.sce.xd.com/
 
-> **重要**: 文档URL可能变化，如果直接链接404，使用搜索引擎 `site:doc.sce.xd.com 关键词` 查找
-
----
-
-## 文档结构导航
-
-### 1. 功能手册 (Manual)
-- 地形编辑器: `/Manual/SceneEditor/Intro`
-- 数据编辑器: `/Manual/DataEditor/Intro`
-- 触发编辑器: `/Manual/TriggerEditor/Intro`
-- 界面编辑器: `/Manual/UIEditor/Introduction`
-- 游戏机制: `/docs/1_Manual/4_GameMechanics/`
-
-### 2. 技术文档 - Lua API
-- **服务端Lua API**: `/技术文档/服务端Lua API/简介`
-- **客户端Lua API**: `/技术文档/客户端Lua API/简介`
-- **Lua修改说明**: `/技术文档/服务端Lua API/我们对Lua做的修改`
-
-### 3. 技术文档 - TypeScript API (主推)
-- **TS入门**: `/技术文档/代码开发必读/HelloWorld_TS`
-- **Lua入门**: `/技术文档/代码开发必读/HelloWorld_lua`
+> **Important**: Documentation URLs may change. If direct link returns 404, use search engine `site:doc.sce.xd.com keyword` to find
 
 ---
 
-## 核心API速查
+## Documentation Structure Navigation
 
-### 事件系统
+### 1. Manual
+- Terrain Editor: `/Manual/SceneEditor/Intro`
+- Data Editor: `/Manual/DataEditor/Intro`
+- Trigger Editor: `/Manual/TriggerEditor/Intro`
+- UI Editor: `/Manual/UIEditor/Introduction`
+- Game Mechanics: `/docs/1_Manual/4_GameMechanics/`
+
+### 2. Technical Documentation - Lua API
+- **Server Lua API**: `/技术文档/服务端Lua API/简介`
+- **Client Lua API**: `/技术文档/客户端Lua API/简介`
+- **Lua Modifications**: `/技术文档/服务端Lua API/我们对Lua做的修改`
+
+### 3. Technical Documentation - TypeScript API (Recommended)
+- **TS Getting Started**: `/技术文档/代码开发必读/HelloWorld_TS`
+- **Lua Getting Started**: `/技术文档/代码开发必读/HelloWorld_lua`
+
+---
+
+## Core API Quick Reference
+
+### Event System
 ```lua
--- 服务端事件监听
+-- Server event listening
 base.game:event("玩家-按键按下", function(trg, player, key)
     if key == "L" then
-        log.info("按下了L键")
+        log.info("Pressed L key")
     end
 end)
 
--- 客户端事件监听
+-- Client event listening
 base.game:event("按键-按下", function(trg, key)
     if key == "Q" then
-        log.info("按下了Q键")
+        log.info("Pressed Q key")
     end
 end)
 ```
 
-### 单位属性操作
+### Unit Attribute Operations
 ```lua
--- 获取属性值
+-- Get attribute value
 local attack = u:get('攻击')
 
--- 设置属性值
+-- Set attribute value
 u:set('攻击', 100)
 
--- 增加属性值
+-- Add attribute value
 u:add('攻击', 10)
 
--- 属性计算公式: 最终值 = 基础值 * (100 + 百分比加成) / 100
+-- Attribute calculation formula: Final value = Base value * (100 + Percentage bonus) / 100
 ```
 
-### 小地图API
+### Minimap API
 ```lua
--- 创建小地图图标
+-- Create minimap icon
 local icon = base.minimap.icon(player, name, point)
 icon:show()
 icon:hide(team)
-icon:set_time(time)  -- 设置倒计时
+icon:set_time(time)  -- Set countdown
 
--- 发送信号
+-- Send signal
 base.minimap.signal(player, name, point)
 ```
 
-### 日志输出
+### Log Output
 ```lua
-log.info("普通信息")
-printerror("错误信息")
+log.info("Normal info")
+printerror("Error info")
 ```
 
 ---
 
-## Lua特殊限制
+## Lua Special Restrictions
 
-### 版本信息
-- 基于 **Lua 5.3.4**
-- 客户端: **32位** | 服务端: **64位**
-- **注意**: 64位数字从服务端发到客户端可能截断，建议转字符串
+### Version Info
+- Based on **Lua 5.3.4**
+- Client: **32-bit** | Server: **64-bit**
+- **Note**: 64-bit numbers sent from server to client may be truncated, recommend converting to string
 
-### 禁用的标准库函数
+### Disabled Standard Library Functions
 ```lua
--- 不支持的OS函数
+-- Unsupported OS functions
 os.execute, os.exit, os.getenv, os.remove, os.rename, os.setlocale, os.tmpname
 
--- 不支持的IO函数
+-- Unsupported IO functions
 io.input, io.output, io.tmpfile, io.popen
 
--- 不支持的加载函数
+-- Unsupported load functions
 dofile, loadfile, package.loadlib
 ```
 
-### 可用的文件操作
+### Available File Operations
 ```lua
--- 只读访问地图文件
+-- Read-only access to map files
 local f = assert(io.open('script/main.lua'))
 print(f:read('a'))
 f:close()
@@ -126,71 +128,71 @@ for line in io.lines('script/main.lua') do
 end
 ```
 
-### 调试函数
+### Debug Functions
 ```lua
 if debug_bp then
-    debug_bp()        -- 强制断点（需调试器连接）
-    debug_bp(60000)   -- 等待调试器连接，最多60秒
-    debug_bp(true)    -- 无限等待调试器连接
+    debug_bp()        -- Force breakpoint (requires debugger connection)
+    debug_bp(60000)   -- Wait for debugger connection, max 60 seconds
+    debug_bp(true)    -- Wait indefinitely for debugger connection
 end
--- 注意: 正式环境不支持 debug_bp
+-- Note: debug_bp not supported in production environment
 ```
 
-### 随机数
+### Random Numbers
 ```lua
--- math.randomseed 已禁用
--- 使用定制的随机数发生器，保证不受外部因素影响
+-- math.randomseed is disabled
+-- Use customized random number generator, guaranteed not affected by external factors
 local n = math.random(1, 100)
 ```
 
 ---
 
-## 项目文件结构
+## Project File Structure
 
 ```
-项目目录/
-├── script/           # 服务端脚本
-│   └── main.lua      # 服务端入口
+Project Directory/
+├── script/           # Server scripts
+│   └── main.lua      # Server entry
 ├── ui/
 │   └── src/
-│       └── main.lua  # 客户端入口
-├── editor/           # 数据编辑器配置
-├── scene/            # 场景文件
-└── res/              # 资源文件
+│       └── main.lua  # Client entry
+├── editor/           # Data editor config
+├── scene/            # Scene files
+└── res/              # Resource files
 ```
 
 ---
 
-## 查阅流程
+## Lookup Workflow
 
-### 当遇到未知API时：
+### When Encountering Unknown API:
 
-1. **识别API来源**
-   - `base.xxx` → 星火底层API
-   - `self._xxx` → 可能是内部方法
-   - 检查是服务端还是客户端代码
+1. **Identify API Source**
+   - `base.xxx` → Spark low-level API
+   - `self._xxx` → May be internal method
+   - Check if it's server or client code
 
-2. **查阅官方文档**
+2. **Consult Official Documentation**
    ```
-   搜索: site:doc.sce.xd.com [API名称]
+   Search: site:doc.sce.xd.com [API name]
    ```
 
-3. **如果文档未找到**
-   - 检查项目中是否有类似用法
-   - 查看触发编辑器生成的代码
-   - 咨询开发者社区
+3. **If Documentation Not Found**
+   - Check if there's similar usage in project
+   - Check trigger editor generated code
+   - Consult developer community
 
-### 常用链接
-- 创作者中心(测试版): https://developer-alpha.spark.xd.com/
-- 创作者中心(线上版): https://developer.spark.xd.com/
-- 开发者交流群: https://qm.qq.com/q/kuDBOInVPq
+### Common Links
+- Creator Center (Test): https://developer-alpha.spark.xd.com/
+- Creator Center (Production): https://developer.spark.xd.com/
+- Developer Exchange Group: https://qm.qq.com/q/kuDBOInVPq
 
 ---
 
-## 注意事项
+## Important Notes
 
-1. **TypeScript是主推语言** - Lua文档可能不完整
-2. **Lua+已废弃** - 文件顶部有 `--- lua_plus ---` 的是旧格式
-3. **客户端/服务端分离** - 注意代码运行环境
-4. **32/64位差异** - 大数字跨端传输需转字符串
-5. **文件路径UTF-8** - 所有文件路径编码都是UTF-8
+1. **TypeScript is the recommended language** - Lua documentation may be incomplete
+2. **Lua+ is deprecated** - Files with `--- lua_plus ---` at top are old format
+3. **Client/Server separation** - Pay attention to code execution environment
+4. **32/64-bit difference** - Large numbers need to be converted to string for cross-end transfer
+5. **File path UTF-8** - All file path encodings are UTF-8

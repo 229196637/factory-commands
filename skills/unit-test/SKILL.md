@@ -1,42 +1,44 @@
 ---
 name: unit-test
-description: 运行单元测试并验证代码质量。当用户实现新功能、修复Bug、修改代码后，或原项目出现Bug时自动触发此技能。
+description: 运行单元测试并验证代码质量。当用户实现新功能、修复Bug、修改代码后，或原项目出现Bug时自动触发此技能。关键词：测试、单元测试、unit test、运行测试、验证代码。
 ---
 
-# Unit Test Skill
+# 单元测试技能
 
 ## 概述
 
-此技能用于在项目中设置和运行单元测试框架，独立于主程序运行，确保代码质量。
+此技能用于在项目中设置和运行单元测试框架，独立于主程序运行以确保代码质量。
 
 ## 触发条件
 
+- 用户说"测试"、"单元测试"、"unit test"
+- 用户说"运行测试"、"验证代码"、"跑一下测试"
 - 用户完成功能实现后
-- 用户修复 Bug 后
+- 用户修复bug后
 - 用户修改代码后
-- 原项目出现 Bug 需要验证时
+- 原项目有bug需要验证
 - 用户明确要求运行测试
 
-## 指令
+## Instructions
 
-### 1. 检测项目类型和测试框架
+### 1. Detect Project Type and Test Framework
 
-首先识别项目类型和对应的测试框架：
+First identify project type and corresponding test framework:
 
-| 项目类型 | 测试框架 | 测试目录 | 运行命令 |
+| Project Type | Test Framework | Test Directory | Run Command |
 |---------|---------|---------|---------|
-| C# (.NET) | UnitTest 项目 | `UnitTest/` | `dotnet build && dotnet run --project UnitTest` |
+| C# (.NET) | UnitTest Project | `UnitTest/` | `dotnet build && dotnet run --project UnitTest` |
 | Python | pytest | `tests/` | `pytest tests/ -v` |
-| Node.js | jest/mocha | `__tests__/` 或 `test/` | `npm test` |
-| Lua | busted/luaunit | `tests/` | `D:\Tools\Lua\lua-5.4.2_Win64_bin\lua.exe tests/run.lua` |
+| Node.js | jest/mocha | `__tests__/` or `test/` | `npm test` |
+| Lua | busted/luaunit | `tests/` | `D:\Tools\Lua\lua-5.4.2_Win64_bin\lua54.exe tests/run.lua` |
 
-### 2. 设置测试环境（如果不存在）
+### 2. Set Up Test Environment (If Not Exists)
 
-如果项目没有测试目录，创建标准测试结构：
+If project has no test directory, create standard test structure:
 
-**C# 项目:**
+**C# Project:**
 ```
-项目根目录/
+Project Root/
 ├── UnitTest/
 │   ├── UnitTest.csproj
 │   └── TestProgram.cs
@@ -44,97 +46,97 @@ description: 运行单元测试并验证代码质量。当用户实现新功能�
     └── .gitkeep
 ```
 
-**Python 项目:**
+**Python Project:**
 ```
-项目根目录/
+Project Root/
 ├── tests/
 │   ├── __init__.py
 │   └── test_main.py
 └── pytest.ini
 ```
 
-**Lua 项目:**
+**Lua Project:**
 ```
-项目根目录/
+Project Root/
 ├── tests/
 │   └── run.lua
 └── TestOutput/
     └── .gitkeep
 ```
 
-### 3. 运行测试
+### 3. Run Tests
 
-根据项目类型执行对应的测试命令：
+Execute corresponding test command based on project type:
 
-**C# 项目:**
+**C# Project:**
 ```bash
-# 编译
-dotnet build <解决方案文件>
+# Build
+dotnet build <solution-file>
 
-# 运行测试
-dotnet run --project <UnitTest项目路径>
+# Run tests
+dotnet run --project <UnitTest-project-path>
 ```
 
-**Python 项目:**
+**Python Project:**
 ```bash
 pytest tests/ -v --tb=short
 ```
 
-**Node.js 项目:**
+**Node.js Project:**
 ```bash
 npm test
 ```
 
-**Lua 项目:**
+**Lua Project:**
 ```bash
-D:\Tools\Lua\lua-5.4.2_Win64_bin\lua.exe tests/run.lua
+D:\Tools\Lua\lua-5.4.2_Win64_bin\lua54.exe tests/run.lua
 ```
 
-### 4. 记录测试输出
+### 4. Record Test Output
 
-将测试结果保存到 `TestOutput/` 目录：
-- 文件命名格式：`test_YYYY-MM-DD_HHmmss.txt`
-- 包含完整的测试输出和时间戳
-- 使用 UTF-8 编码
+Save test results to `TestOutput/` directory:
+- File naming format: `test_YYYY-MM-DD_HHmmss.txt`
+- Include complete test output and timestamp
+- Use UTF-8 encoding
 
-### 5. 可视化测试（可选）
+### 5. Visual Testing (Optional)
 
-单元测试通过后，如果用户要求，运行主程序进行可视化验证：
-- 验证 UI 显示正常
-- 验证功能行为符合预期
-- 检查日志输出
+After unit tests pass, if user requests, run main program for visual verification:
+- Verify UI displays correctly
+- Verify feature behavior meets expectations
+- Check log output
 
-## 成功标准
+## Success Criteria
 
-- [ ] 测试框架已设置或已存在
-- [ ] 所有单元测试通过
-- [ ] 测试输出已记录
-- [ ] 无编译错误
-- [ ] 无运行时异常
+- [ ] Test framework is set up or already exists
+- [ ] All unit tests pass
+- [ ] Test output is recorded
+- [ ] No compilation errors
+- [ ] No runtime exceptions
 
-## 失败处理
+## Failure Handling
 
-### 编译失败
-1. 分析错误信息
-2. 定位问题代码
-3. 提供修复建议
-4. 修复后重新运行测试
+### Compilation Failure
+1. Analyze error message
+2. Locate problem code
+3. Provide fix suggestions
+4. Re-run tests after fix
 
-### 测试失败
-1. 分析失败的测试用例
-2. 检查相关代码逻辑
-3. 提供修复方案
-4. 修复后重新验证
+### Test Failure
+1. Analyze failed test cases
+2. Check related code logic
+3. Provide fix solution
+4. Re-verify after fix
 
-### 运行时错误
-1. 检查日志文件
-2. 分析堆栈跟踪
-3. 定位问题根源
-4. 提供解决方案
+### Runtime Error
+1. Check log files
+2. Analyze stack trace
+3. Locate root cause
+4. Provide solution
 
-## 测试用例模板
+## Test Case Templates
 
-### C# 测试模板
+### C# Test Template
 ```csharp
 namespace UnitTest;
 
@@ -152,10 +154,10 @@ public class TestProgram
 
     private static void RunTests()
     {
-        // [TC001] 测试用例名称
+        // [TC001] Test case name
         try
         {
-            // 测试逻辑
+            // Test logic
             Console.WriteLine("[TC001] Test Name");
             Console.WriteLine("  Result: PASS");
         }
@@ -167,13 +169,13 @@ public class TestProgram
 }
 ```
 
-### Python 测试模板
+### Python Test Template
 ```python
 import pytest
 
 class TestMain:
     def test_example(self):
-        """TC001: 测试用例描述"""
+        """TC001: Test case description"""
         # Arrange
         expected = True
         
@@ -184,7 +186,7 @@ class TestMain:
         assert result == expected
 ```
 
-### Lua 测试模板
+### Lua Test Template
 ```lua
 -- tests/run.lua
 local function test_example()
@@ -216,18 +218,18 @@ else
 end
 ```
 
-## 环境配置
+## Environment Configuration
 
-### Lua 虚拟机
-- 路径: `D:\Tools\Lua\lua-5.4.2_Win64_bin`
-- 执行命令: `D:\Tools\Lua\lua-5.4.2_Win64_bin\lua.exe`
+### Lua VM
+- Path: `D:\Tools\Lua\lua-5.4.2_Win64_bin`
+- Execute command: `D:\Tools\Lua\lua-5.4.2_Win64_bin\lua54.exe`
 
-## 测试的文档生成位置
-- 测试文件夹记录文件夹: docs/测试文档
+## Test Documentation Location
+- Test folder record location: docs/测试文档
 
-## 注意事项
+## Important Notes
 
-1. **独立性**: 测试必须独立于主程序运行
-2. **可重复性**: 测试结果必须可重复
-3. **隔离性**: 测试之间不应相互影响
-4. **记录性**: 所有测试结果必须记录到文件
+1. **Independence**: Tests must run independently from main program
+2. **Repeatability**: Test results must be repeatable
+3. **Isolation**: Tests should not affect each other
+4. **Recording**: All test results must be recorded to file
